@@ -1,0 +1,219 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{cmap}		
+%\usepackage[utf8]{inputenc}			
+\usepackage[spanish]{babel}
+\usepackage{framed}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{wrapfig}
+\usepackage{lipsum}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{indentfirst}
+\usepackage{times}
+\usepackage{textcomp}
+\usepackage{pgfgantt}
+\usepackage{lipsum}
+\usepackage{csquotes}
+
+% set document font, font sizes, margin dimensions and spacing
+\usepackage{fontspec}
+\setmainfont{Arial}
+\usepackage[top=15mm,bottom=25mm,left=20mm,right=20mm]{geometry}
+\usepackage{setspace}\onehalfspacing
+\usepackage{titlesec}
+\titleformat*{\section}{\Large\bfseries}
+\titleformat*{\subsection}{\Large\bfseries}
+\titleformat*{\subsubsection}{\Large\bfseries}
+\titleformat*{\paragraph}{\Large\bfseries}
+\titleformat*{\subparagraph}{\Large\bfseries}
+\setlength{\parskip}{0.6em}
+
+\newif\ifblackandwhite
+\blackandwhitetrue
+
+\usepackage{etoolbox}
+\usepackage{longtable}%
+\AtBeginEnvironment{longtable}{%
+  \addfontfeature{RawFeature=+tnum;-onum}%  <--- requires LuaTeX
+}
+
+\usepackage{pdflscape}
+%\usepackage[svgnames]{xcolor}
+ \usepackage{colortbl}%
+   \newcommand{\myrowcolour}{\rowcolor[gray]{0.925}}
+\usepackage{booktabs}
+
+\ifblackandwhite
+  \newcommand{\cheading}[2]{\textbf{#1\hfill #2}}
+  \newcommand{\highest}[1]{\textbf{#1}}% == highest score for question
+\else
+  \newcommand{\cheading}[2]{\textcolor{Maroon}{\textbf{#1\hfill #2}}}
+  \newcommand{\highest}[1]{\textcolor{Maroon}{\textbf{#1}}}%
+\fi
+
+\definecolor{mygray}{rgb}{0.4,0.4,0.4}
+\definecolor{mygreen}{rgb}{0,0.8,0.6}
+\definecolor{myorange}{rgb}{1.0,0.4,0}
+
+\lstdefinestyle{customc}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  frame=L,
+  xleftmargin=\parindent,
+  language=C,
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{orange},
+  numbers=left,
+  numbersep=12pt,
+  numberstyle=\small\color{mygray},
+}
+\lstset{escapechar=@,style=customc}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+%Definindo um comando todoin que aceita quebra de linha e fórmulas
+\newcommand\todoin[2][]{\todo[inline, caption={2do}, #1]{
+\begin{minipage}{\textwidth-4pt}#2\end{minipage}}}
+
+\newcommand\todogeg[2][]{\todo[inline, caption={#2}, color=yellow!100, #1]{
+\begin{minipage}{\textwidth-4pt}#2\end{minipage}}}
+
+\newcommand\todovwcm[2][]{\todo[inline, caption={#2}, color=red!100, #1]{
+\begin{minipage}{\textwidth-4pt}#2\end{minipage}}}
+\begin{document}
+\begin{titlepage}
+\begin{center}
+
+% logo
+\includegraphics[width=0.5\textwidth]{images/logo-udea.png}~
+\\[2cm]
+
+
+
+% identificação do relatório
+\HRule \\[0.4cm]
+{\large \bfseries PROYECTO DE INVESTIGACIÓN: HILOS \\
+[0.4cm]}
+\HRule 
+\\[2cm]
+
+% identificação do aluno
+\large\textbf{ALUMNO}\\[1cm]
+ANDREA OSPINA HINCAPIÉ\\
+andrea.ospinah@udea.edu.co\\
+INFORMÁTICA II \\
+ INGENIERÍA ELECTRÓNICA
+\\[1.5cm]
+
+% identificação do orientador
+\large\textbf{DOCENTE}\\[1cm]
+AUGUSTO ENRIQUE SALAZAR JIMÉNEZ\\
+DEPARTAMENTO DE INGENIERÍA ELECTRÓNICA Y TELECOMUNICACIONES
+\\[1cm]
+
+
+
+\vfill
+
+% Bottom of the page
+{\large \textbf{17 DE JULIO DE 2020}}
+
+\end{center}
+\end{titlepage}
+
+\newpage
+\centerline{{\large\bfseries PROYECTO DE INVESTIGACIÓN: HILOS}}
+
+En la actualidad es bastante común que para poder usar una aplicación, por ejemplo, sea necesario ejecutar miles y miles de procesos casi que de manera simultánea y de la forma más eficiente posible.A nivel de hardware, algunas de las herramientas utilizadas para este objetivo han sido el uso de múltiples núcleos en un procesador, de manera que sea posible ejecutar más procesos en un menor tiempo, así como el uso de un hilo o múltiples hilos asociados a un núcleo \cite[p.736]{Chivers2003}.
+
+Pero, ¿qué son estos hilos?¿cómo funcionan?¿qué tipos existen? Estas y otras preguntas sobre los hilos serán respondidas a continuación:
+
+{\large\bfseries ¿Qué es un hilo en el contexto de los microprocesadores?} 
+
+Un hilo puede entenderse como la "unidad básica de utilización de un procesador" \cite[p.43]{rodriguez2007gran} por lo que si se tiene, por ejemplo, una aplicación que se va a ejecutar,  entonces se crea un proceso pesado al que se le asignan recursos y que, a su vez, se divide en procesos ligeros (hilos) \cite[p.68]{candela2007fundamentos}, de manera que puedan entenderse como ramas del programa que se ejecutan en paralelo. \cite[p.70]{pascual2002conceptos}.
+Cada hilo tiene su propio conjunto de registros, contador de programa y pila \cite{rodriguez2007gran}\cite{candela2007fundamentos} que corresponden a su ID, mientras que comparten recursos asignados al proceso duro con los otros hilos, como es el caso de las señales de un sistema operativo o los archivos que se encuentren abiertos \cite{rodriguez2007gran}.
+Es por medio de hilos que, entonces, se le da solución a diversos problemas como el tener una base de dato con múltiples usuarios realizando peticiones de acceso a esta de manera simúltanea. Sin el uso de múltiples hilos solo se podría permitir el acceso a un usuario a la vez.
+
+{\large\bfseries ¿Se puede hablar de la historia de los hilos?} 
+
+El concepto de hilos y uso de múltiples hilos ha existido desde los años 50. El computador DYSEAC, el primer computador portable, comenzó su funcionamiento en 1954 y fue uno de los primeros en utilizar múltiples hilos e incluir dos contadores de programa. Durante el mismo periodo de tiempo en el que fue desarrollado el anterior computador se creó también el LINCOLN TX-2 en los laboratorios del MIT el cual, con el objetivo de manejar múltiples dispositivos I/O según un nivel de prioridad, implementó múltiples hilos y hasta 33 contadores de programa \cite[p.83]{nemirovsky2013multithreading}.
+En los siguientes años, mútliples laboratorios e investigadores continuaron investigando el uso de procesadores que utilizan múltiples hilos hasta que en 2000 salió al mercado el procesador de Intel Pentium 4, el cual se convirtió en el primer procesador comercial y de propósito general en usar múltiples hilos o, como fue patentado por Intel, el primero en usar "hyper-threading"
+\cite[p.91]{nemirovsky2013multithreading}.
+Por otro lado, puede ser interesante también conocer las soluciones a los problemas que los hilos solucionan actualmente antes de que estos se popularizaran. Un ejemplo de esto era la creación de procesos para responder a múltiples peticiones simultáneas en lugar de crear múltiples hilos. Esta solución no era eficiente ya que demandaba el uso de abundantes recursos de procesamiento en la creación de procesos \cite[p.43]{rodriguez2007gran}.
+
+{\large\bfseries ¿Que tipo de hilos existen? }
+
+Existen dos tipos distintos de hilos así como combinaciones de estos tipos, ofrecidas por sistemas operativos específicos como es el caso de Solaris,un sistema operativo de Unix \cite[p.192]{stallings2009operating}.
+Los tipos de hilos son:
+
+{\large\bfseries Hilos a nivel de usuario(ULT): } 
+
+Son aquellos que se gestionan sin soporte de un sistema operativo y existen en tiempo de ejecución. Estos son implementados por medio de una librería cuyo código se encuentra en el espacio de usuario y por lo tanto este dispone del código de manera similar a como dispone de módulos propios desarrollados, permitiendo el uso de algoritmos personalizados para planificar los hilos de un proceso. \cite{candela2007fundamentos}\cite{shibu2009introduction}.
+
+A diferencia de los hilos a nivel de núcleo, los hilos a nivel de usuario utilizan el planificador del runtime por lo que el núcleo no identifica la existencia de múltiples hilos de usuario y los trata como uno solo, esto permite que los hilos puedan ser implementados así el sistema operativo que se esté usando no soporte hilos \cite{silva2015sistemas}.
+
+{\large\bfseries Hilos a nivel de núcleo (KLT):}
+
+Son aquellos manejados por el sistema operativo a través de llamadas al sistema \cite{candela2007fundamentos} de manera que el sistema interrumpe la ejecución de un hilo para ejecutar otro según un orden establecido por el sistema operativo. Esto hace que el cambio entre hilos a nivel de núcleo sea más lento comparado con el cambio entre hilos a nivel de usuario \cite[p.401]{silva2015sistemas}. 
+
+{\large\bfseries ¿Cómo se hace la implementación de hilos a nivel de hardware? } 
+
+La implementación de hilos a nivel de hardware depende en gran medida de si se implementa una arquitectura con un único o múltiples procesadores o núcleos.
+En el caso en que solo se tiene un procesador  los hilos son implementados cambiando rápidamente entre hilos de software para crear una ilusión de paralelismo ya que no es posible ejecutar varios hilos simultáneamente.
+Por lo tanto, y como es de esperarse, en un procesador con múltiples núcleos o en un sistema con múltiples procesadores sí es posible tener un verdadero paralelismo entre hilos al cada procesador o núcleo ejecutar por lo menos un hilo.
+Este último proceso ha recibido distintos nombres según la empresa fabricante de procesadores con múltiples núcleos. En el caso de Intel el uso de múltiples hilos recibe el nombre de "hyper-threading", mientras que AMD lo denomina "simultaneous multithreading". \cite[p.402]{shibu2009introduction}.
+
+
+
+{\large\bfseries ¿Cómo se implementan los hilos por software?  } 
+
+La implementación de hilos a través de software depende tanto del lenguaje de programación utilizado como del sistema operativo en el que se realiza. 
+En el caso de los sistemas operativos una de las diferencias fundamentales entre implementaciones de hilos es el número de hilos usados por proceso. En el caso de implementaciones tradicionales de Unix lo común es que por cada proceso solo exista un hilo, y para otros sistemas operativos como Linux, Solaris y Windows se pueden tener múltiples hilos por proceso \cite[p.169]{stallings2009operating}.
+Otra diferencia radica en la relación entre hilos a nivel de usuario e hilos a nivel de núcleo, lo cual establece el modelo multihilo que se esté usando. Windows y Linux utilizan un modelo uno a uno en el que a un hilo de usuario se le asigna a un hilo de núcleo que permite la ejecución de múltiples hilos simultáneamente sobre varios procesadores. Sin embargo, la creación de hilos de núcleo puede afectar el rendimiento de la aplicación por lo que este tipo de implementaciones suelen limitar el número de hilos que puede soportar el sistema \cite[p.45]{rodriguez2007gran}.
+Para que el programar pueda implementar los hilos es común el uso de librerías de hilos que permite tener una API(application programming interface) para la gestión de estos. El uso de estas librerías puede darse ya sea en el espacio de usuario o en el espacio del kernel, involucrando esto último llamadas al kernel por lo que la implementación de estas depende, de nuevo, del sistema operativo \cite[p.46]{rodriguez2007gran}.
+En el caso de los lenguajes de programación puede encontrarse una diferencia en el grado de dificultad involucrado en la creación de hilos. Java, por ejemplo, fue creado como un lenguaje para implementar múltiples hilos por lo que sus objetos contienen un candado que facilita la comunicación y sincronización entre hilos, así como palabras reservadas que facilitan esta sincronización. Lo anterior hace que la implementación de hilos en Java implique menos trabajo que, por ejemplo, en C++, un lenguaje que para lanzar y sicronizar múltiples hilos es necesario utilizar una o múltiples librerías como la librería threads (a partir de C++11) \cite[p.126]{lee2017foundations}.
+
+{\large\bfseries Implementación de hilos} 
+
+A continuación se mostrará una implementación de hilos en C++ para lo cual debe tenerse en cuenta algunos de los siguientes elementos:
+
+{\large\bfseries Hilos en C++} 
+
+-Existen dos maneras de implementar hilos en C++: la primera consiste en el uso de la librería pthread, incluída dentro del POSIX standard, usado por sistemas operativos como Linux y Mac, pero no directamente por Windows. La segunda manera es con el uso de la librería threads a partir de C++11, la cual es la forma nativa de implementación al hacer parte de C++ estándar \cite[p.284]{swaminathan2018expert}.
+Por las ventajas que ofrece la librería threads se usará esta en el ejemplo de implementación.
+
+-Para la implementación de hilos se crea por lo menos una función a ejecutar por los hilos. Usando std::thread esta función puede recibir tantos parámetros como se desee \cite[p.748]{gregoire2014professional}.
+
+-Para lanzar un hilo se utiliza la funciń std::thread con un primer parámetro que será el nombre de la función a ejecutar y los siguientes parámetros seránlos valores de la función que se ejecutará (Esto se implementa usando punteros a funciones)\cite[p.748]{gregoire2014professional}.
+
+-Al lanzar los hilos es necesario llamar join() en ejemplos sencillos. Lo que este join() permite es que se continúe ejecutando el main al lanzar los hilos \cite[p.748]{gregoire2014professional}.
+
+-Cuando se utilizan hilos se debe tener cuidado cuando múltiples hilos comparten información.Para evitar problemas deben sincronizarse los hilos. Existen múltiples formas de realizar esta sincronizaciones dependiendo de la complejidad de los datos como las funciones de la librería atomic \cite[p.758]{gregoire2014professional} o la sincronización explícita usando la clases mutex que implementa métodos como lock() y unlock() para el manejo de información \cite[p.759]{gregoire2014professional}.
+
+{\large\bfseries Ejemplo de implementación}
+
+El siguiente ejemplo utiliza múltiples hilos para ejecutar dos funciones: la primera función se encarga de duplicar un número que se le pasa por referencia y la segunda función se encarga de sumar dos números que se le pasan como parámetros. Además, los hilos que ejecuten la función 1 deberán dormir durante 10 segundos después de
+realizar la multiplicación, mientras que el hilo que ejecuta la función 2 deberá dormir por 3 segundos antes de realizar la suma.
+Por último, se mostrarán los tiempos de inicio y finalización de la ejecución de cada función.
+Para esto se utilizará la librería threads, chrono, ctime y mutex para lanzar los hilos, obtener los tiempos de ejecución y sincronizar los hilos.
+
+El código fuente de la implementación puede encontrarse en \href{https://github.com/AndreaOspinaHincapie/Informatica2/tree/master/Proyectos%20de%20investigaci%C3%B3n/Hilos/Hilos}{\underline {esta}}
+ carpeta del repositorio, junto con el .pro utilizado para su ejecución correcta en QtCreator. Este código fue implementado en Ubuntu 18.04 LTS.
+
+\newpage
+
+\renewcommand\refname{REFERENCIAS BIBLIOGRÁFICAS}
+%\bibliographystyle{abntex2-alf}
+\bibliographystyle{IEEEtran}
+\bibliography{referencias.bib}
+%\listoftodos
+
+\end{document}
